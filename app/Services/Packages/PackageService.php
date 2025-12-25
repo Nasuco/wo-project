@@ -73,4 +73,9 @@ class PackageService
     {
         return $this->packageRepository->bulkDelete($ids);
     }
+
+    public function getPackagesForExport(array $selectedIds = [], string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc')
+    {
+        return $this->packageRepository->getForExport($selectedIds, $search, $sortCol, $sortDir);
+    }
 }

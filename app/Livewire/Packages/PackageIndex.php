@@ -4,12 +4,14 @@ namespace App\Livewire\Packages;
 
 use App\Domain\Packages\DTOs\CreatePackageDTO;
 use App\Domain\Packages\DTOs\UpdatePackageDTO;
+use App\Exports\PackagesExport;
 use App\Livewire\Forms\PackageForm;
 use App\Models\Packages;
 use App\Services\Packages\PackageService;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function Flasher\Prime\flash;
 
@@ -131,21 +133,19 @@ class PackageIndex extends Component
             ->warning('Apakah benar ingin menghapus paket ini?');
     }
 
-        public function confirmBulkDelete()
-        {
-            if (empty($this->selected)) {
-                flash()->error('Tidak ada data yang dipilih.');
-                return;
-            }
-
-            $this->isBulkDeletion = true;
-
-            sweetalert()
-                ->showDenyButton()
-                ->confirmButtonText('Ya, hapus semua')
-                ->denyButtonText('Batal')
-                ->warning('Anda akan menghapus ' . count($this->selected) . ' data terpilih!');
+    public function confirmBulkDelete()
+    {
+        if (empty($this->selected)) {
+            flash()->error('Tidak ada data yang dipilih.');
+            return;
         }
+        $this->isBulkDeletion = true;
+        sweetalert()
+            ->showDenyButton()
+            ->confirmButtonText('Ya, hapus semua')
+            ->denyButtonText('Batal')
+            ->warning('Anda akan menghapus ' . count($this->selected) . ' data terpilih!');
+    }
 
     #[On('sweetalert:confirmed')]
     public function onDeleteConfirmed(): void
@@ -171,8 +171,8 @@ class PackageIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = $this->userService
-                ->paginateUsers(10, $this->search)
+            $this->selected = $this->packageService
+                ->getPaginatedPackages(10, $this->search)
                 ->pluck('id')
                 ->map(fn($id) => (string) $id)
                 ->toArray();
@@ -200,6 +200,25 @@ class PackageIndex extends Component
         $this->refreshPackages();
         
         flash()->success('Data terpilih berhasil dihapus.'); 
+    }
+
+    public function export()
+    {
+        $data = $this->packageService->getPackagesForExport(
+            $this->selected, 
+            $this->search, 
+            $this->sortCol, 
+            $this->sortDir
+        );
+
+        $fileName = 'packages-' . date('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new PackagesExport($data), $fileName);
+    }
+
+    public function exportBulk()
+    {
+        return $this->export();
     }
 
     private function refreshPackages()

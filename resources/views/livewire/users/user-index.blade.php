@@ -5,10 +5,21 @@
         <flux:separator variant="subtle" />
     </div>
 
+    @if(count($selected) === 0)
+        <div class="flex justify-end mb-4">
+            <flux:button 
+                wire:click="export" 
+                icon="arrow-down-tray" 
+            >
+                Export Excel
+            </flux:button>
+        </div>
+    @endif
+
     <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex flex-col md:flex-row items-center justify-between gap-4">
             @if(count($selected) > 0)
-                <x-bulk-action-bar :count="count($selected)" />
+                <x-bulk-action-bar :count="count($selected)" exportAction="exportBulk" />
             @else
                 <div class="text-lg font-medium text-gray-900 dark:text-white w-full md:w-auto">
                     Daftar Pengguna
