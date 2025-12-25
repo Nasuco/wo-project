@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -14,7 +15,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         return User::latest()->get();
     }
 
-    public function paginate(int $perPage = 10, string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): LengthAwarePaginator
+    protected function buildQuery(string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): Builder
     {
         return User::query()
             ->when($search, function ($query, $search) {
@@ -23,8 +24,12 @@ class EloquentUserRepository implements UserRepositoryInterface
                       ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->orderBy($sortCol, $sortDir)
-            ->paginate($perPage);
+            ->orderBy($sortCol, $sortDir);
+    }
+
+    public function paginate(int $perPage = 10, string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): LengthAwarePaginator
+    {
+        return $this->buildQuery($search, $sortCol, $sortDir)->paginate($perPage);
     }
 
     public function find(int $id): ?User
@@ -50,5 +55,16 @@ class EloquentUserRepository implements UserRepositoryInterface
     public function bulkDelete(array $ids): bool
     {
         return User::whereIn('id', $ids)->delete();
+    }
+
+    public function getForExport(array $selectedIds = [], string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): Collection
+    {
+        if (!empty($selectedIds)) {
+            return User::whereIn('id', $selectedIds)
+                ->orderBy($sortCol, $sortDir)
+                ->get();
+        }
+        
+        return $this->buildQuery($search, $sortCol, $sortDir)->get();
     }
 }

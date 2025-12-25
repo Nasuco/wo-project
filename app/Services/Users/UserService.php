@@ -68,4 +68,9 @@ class UserService
     {
         return $this->userRepository->bulkDelete($ids);
     }
+
+    public function getUsersForExport(array $selectedIds = [], string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc')
+    {
+        return $this->userRepository->getForExport($selectedIds, $search, $sortCol, $sortDir);
+    }
 }

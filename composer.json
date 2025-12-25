@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.9.0",
         "livewire/volt": "^1.7.0",
+        "maatwebsite/excel": "^3.1",
         "php-flasher/flasher-laravel": "^2.3",
         "php-flasher/flasher-sweetalert-laravel": "^2.3",
         "php-flasher/flasher-toastr-laravel": "^2.3"

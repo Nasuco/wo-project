@@ -20,4 +20,5 @@ interface UserRepositoryInterface
     public function update(User $user, array $data): bool;
     public function delete(User $user): bool;
     public function bulkDelete(array $ids): bool;
+    public function getForExport(array $selectedIds = [], string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): Collection;
 }

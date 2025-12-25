@@ -4,11 +4,13 @@ namespace App\Livewire\Users;
 
 use App\Domain\Users\DTOs\CreateUserDTO;
 use App\Domain\Users\DTOs\UpdateUserDTO;
+use App\Exports\UsersExport;
 use App\Livewire\Forms\UserForm;
 use App\Services\Users\UserService;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function Flasher\Prime\flash;
 
@@ -195,6 +197,25 @@ class UserIndex extends Component
         $this->refreshUsers();
         
         flash()->success('Data terpilih berhasil dihapus.'); 
+    }
+
+    public function export()
+    {
+        $data = $this->userService->getUsersForExport(
+            $this->selected, 
+            $this->search, 
+            $this->sortCol, 
+            $this->sortDir
+        );
+
+        $fileName = 'users-' . date('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new UsersExport($data), $fileName);
+    }
+
+    public function exportBulk()
+    {
+        return $this->export();
     }
 
     private function refreshUsers()
