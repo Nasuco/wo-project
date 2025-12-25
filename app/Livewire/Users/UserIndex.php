@@ -15,29 +15,35 @@ use function Flasher\Prime\flash;
 class UserIndex extends Component
 {
     use WithPagination;
+    public $search = '';
     public UserForm $form;
 
-    // public $users;
     public $modalKey = 0;
     
     public $showUser;
     public $deleteUserId;
 
+    protected UserService $userService;
+
     public function boot(UserService $userService)
     {
         $this->userService = $userService;
     }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     
-    protected UserService $userService;
 
     public function mount()
     {
-        // $this->refreshUsers();
+        //
     }
 
     public function render()
     {
-        $users = $this->userService->paginateUsers(10);
+        $users = $this->userService->paginateUsers(10, $this->search);
         return view('livewire.users.user-index', [
             'users' => $users
         ]);

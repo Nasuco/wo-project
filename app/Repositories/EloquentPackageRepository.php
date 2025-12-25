@@ -13,9 +13,14 @@ class EloquentPackageRepository implements PackageRepositoryInterface
         return Packages::latest()->get();
     }
 
-    public function paginate(int $perPage = 10): LengthAwarePaginator
+    public function paginate(int $perPage = 10, string $search = ''): LengthAwarePaginator
     {
-        return Packages::latest()->paginate($perPage);
+        return Packages::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate($perPage);
     }
 
     public function find(int $id): ?Packages

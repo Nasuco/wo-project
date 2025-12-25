@@ -16,27 +16,32 @@ use function Flasher\Prime\flash;
 class PackageIndex extends Component
 {
     use WithPagination;
+    public $search = '';
     public PackageForm $form;
-    // public $packages;
     public $modalKey = 0;
     public $showPackage;
     public $deletePackageId;
+
+    protected PackageService $packageService;
 
     public function boot(PackageService $packageService)
     {
         $this->packageService = $packageService;
     }
 
-    protected PackageService $packageService;
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
-        // $this->refreshPackages();
+        //
     }
 
     public function render()
     {
-        $packages = $this->packageService->getPaginatedPackages(10); 
+        $packages = $this->packageService->getPaginatedPackages(10, $this->search); 
 
         return view('livewire.packages.package-index', [
             'packages' => $packages
@@ -59,7 +64,7 @@ class PackageIndex extends Component
 
         $this->packageService->createPackage($dto);
         $this->resetPage();
-        
+
         $this->afterAction('Paket berhasil dibuat.');
     }
     

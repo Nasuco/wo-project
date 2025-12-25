@@ -7,16 +7,24 @@
 
     <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex items-center justify-between">
-            <div class="text-lg font-medium text-gray-900 dark:text-white">Daftar Paket</div>
-            <flux:modal.trigger name="create-package">
-                <button
-                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah
-                </button>
-            </flux:modal.trigger>
+            <div class="text-lg font-medium text-gray-900 dark:text-white w-full md:w-auto">
+                Daftar Paket
+            </div>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+
+                <x-search-input wire:model.live="search" />
+
+                <flux:modal.trigger name="create-package">
+                    <button
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah
+                    </button>
+                </flux:modal.trigger>
+                
+            </div>
         </div>
 
         <div class="overflow-x-auto">

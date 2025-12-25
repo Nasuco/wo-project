@@ -36,8 +36,7 @@
                             {{ $element }}
                         </span>
                     @endif
-
-                    {{-- Case 2: Jika elemen adalah array link (halaman) --}}
+                    
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())

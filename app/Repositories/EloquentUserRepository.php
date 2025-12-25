@@ -14,9 +14,17 @@ class EloquentUserRepository implements UserRepositoryInterface
         return User::latest()->get();
     }
 
-    public function paginate(int $perPage = 10): LengthAwarePaginator
+    public function paginate(int $perPage = 10, string $search = ''): LengthAwarePaginator
     {
-        return User::latest()->paginate($perPage);
+        return User::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate($perPage);
     }
 
     public function find(int $id): ?User

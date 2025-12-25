@@ -6,17 +6,27 @@
     </div>
 
     <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex items-center justify-between">
-            <div class="text-lg font-medium text-gray-900 dark:text-white">Daftar Pengguna</div>
-            <flux:modal.trigger name="create-user">
-                <button
-                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Tambah
-                </button>
-            </flux:modal.trigger>
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="text-lg font-medium text-gray-900 dark:text-white w-full md:w-auto">
+                Daftar Pengguna
+            </div>
+
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                
+                <x-search-input wire:model.live="search" />
+
+                <flux:modal.trigger name="create-user">
+                    <button
+                        class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 whitespace-nowrap">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah
+                    </button>
+                </flux:modal.trigger>
+
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -61,14 +71,14 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <flux:button.group>
                                 <flux:modal.trigger name="show-user">
-                                    <flux:button icon="eye" color="purple" wire:click="openShowModal({{ $user->id }})" title="Detail"></flux:button>
+                                    <flux:button icon="eye" wire:click="openShowModal({{ $user->id }})" title="Detail"></flux:button>
                                 </flux:modal.trigger>
 
                                 <flux:modal.trigger name="edit-user">
-                                    <flux:button icon="pencil-square" color="blue" wire:click="openEditModal({{ $user->id }})" title="Edit"></flux:button>
+                                    <flux:button icon="pencil-square" wire:click="openEditModal({{ $user->id }})" title="Edit"></flux:button>
                                 </flux:modal.trigger>
 
-                                <flux:button icon="trash" color="red" wire:click="confirmDelete({{ $user->id }})" title="Delete"></flux:button>
+                                <flux:button icon="trash" wire:click="confirmDelete({{ $user->id }})" title="Delete"></flux:button>
                             </flux:button.group>
                         </td>
                     </tr>
