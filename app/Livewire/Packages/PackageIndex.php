@@ -171,8 +171,8 @@ class PackageIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = $this->userService
-                ->paginateUsers(10, $this->search)
+            $this->selected = $this->packageService
+                ->getPaginatedPackages(10, $this->search)
                 ->pluck('id')
                 ->map(fn($id) => (string) $id)
                 ->toArray();
