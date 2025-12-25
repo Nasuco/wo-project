@@ -23,6 +23,9 @@ class PackageIndex extends Component
     public $deletePackageId;
     public $sortCol = 'created_at';
     public $sortDir = 'desc';
+    public $selected = [];
+    public $selectAll = false;
+    public bool $isBulkDeletion = false;
 
     protected PackageService $packageService;
 
@@ -119,6 +122,7 @@ class PackageIndex extends Component
     {
         if (!$id) return;
         
+        $this->isBulkDeletion = false;
         $this->deletePackageId = $id;
         sweetalert()
             ->showDenyButton()
@@ -127,15 +131,75 @@ class PackageIndex extends Component
             ->warning('Apakah benar ingin menghapus paket ini?');
     }
 
+        public function confirmBulkDelete()
+        {
+            if (empty($this->selected)) {
+                flash()->error('Tidak ada data yang dipilih.');
+                return;
+            }
+
+            $this->isBulkDeletion = true;
+
+            sweetalert()
+                ->showDenyButton()
+                ->confirmButtonText('Ya, hapus semua')
+                ->denyButtonText('Batal')
+                ->warning('Anda akan menghapus ' . count($this->selected) . ' data terpilih!');
+        }
+
     #[On('sweetalert:confirmed')]
     public function onDeleteConfirmed(): void
     {
-        if ($this->deletePackageId) {
+        if ($this->isBulkDeletion) {
+            $this->packageService->bulkDeletePackages($this->selected);
+            
+            $this->resetSelection();
+            $this->refreshPackages();
+            
+            flash()->success('Data terpilih berhasil dihapus.');
+            
+            $this->isBulkDeletion = false;
+        }
+        elseif ($this->deletePackageId) {
             $this->packageService->deletePackage($this->deletePackageId);
             $this->deletePackageId = null;
             $this->refreshPackages();
             $this->afterAction('Paket berhasil dihapus.');
         }
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->userService
+                ->paginateUsers(10, $this->search)
+                ->pluck('id')
+                ->map(fn($id) => (string) $id)
+                ->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedPage() { $this->resetSelection(); }
+    public function updatedSearch() { $this->resetSelection(); }
+
+    public function resetSelection()
+    {
+        $this->selected = [];
+        $this->selectAll = false;
+    }
+
+    public function deleteSelected()
+    {
+        if (empty($this->selected)) return;
+
+        $this->packageService->bulkDeletePackages($this->selected);
+
+        $this->resetSelection();
+        $this->refreshPackages();
+        
+        flash()->success('Data terpilih berhasil dihapus.'); 
     }
 
     private function refreshPackages()

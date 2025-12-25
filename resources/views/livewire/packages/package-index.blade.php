@@ -7,33 +7,40 @@
 
     <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex items-center justify-between">
-            <div class="text-lg font-medium text-gray-900 dark:text-white w-full md:w-auto">
-                Daftar Paket
-            </div>
-            <div class="flex items-center gap-3 w-full md:w-auto">
+            @if(count($selected) > 0)
+                <x-bulk-action-bar :count="count($selected)" />
+            @else
+                <div class="text-lg font-medium text-gray-900 dark:text-white w-full md:w-auto">
+                    Daftar Paket
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
 
-                <x-search-input wire:model.live="search" />
+                    <x-search-input wire:model.live="search" />
 
-                <flux:modal.trigger name="create-package">
-                    <button
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Tambah
-                    </button>
-                </flux:modal.trigger>
-
-            </div>
+                    <flux:modal.trigger name="create-package">
+                        <button
+                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-medium text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Tambah
+                        </button>
+                    </flux:modal.trigger>
+                </div>
+            @endif
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
                 <thead class="bg-gray-50 dark:bg-zinc-800/50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider w-12">
+                        <th scope="col" class="px-6 py-3 text-left w-12">
                             <div class="flex items-center">
-                                <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-600 dark:checked:bg-indigo-500">
+                                <input 
+                                    type="checkbox" 
+                                    wire:model.live="selectAll"
+                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-600 dark:checked:bg-indigo-500 cursor-pointer transition-colors"
+                                >
                             </div>
                         </th>
                         <x-sortable-th name="name" :sort-col="$sortCol" :sort-dir="$sortDir">
@@ -58,7 +65,14 @@
                     @foreach($packages as $package)
                     <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors duration-150">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-600 dark:checked:bg-indigo-500">
+                            <div class="flex items-center">
+                                <input 
+                                    type="checkbox" 
+                                    value="{{ $package->id }}" 
+                                    wire:model.live="selected"
+                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-600 dark:checked:bg-indigo-500 cursor-pointer"
+                                >
+                            </div>
                         </td>
                         
                         <td class="px-6 py-4">
