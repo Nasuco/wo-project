@@ -9,12 +9,15 @@ use App\Models\Packages;
 use App\Services\Packages\PackageService;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithPagination;
+
 use function Flasher\Prime\flash;
 
 class PackageIndex extends Component
 {
+    use WithPagination;
     public PackageForm $form;
-    public $packages;
+    // public $packages;
     public $modalKey = 0;
     public $showPackage;
     public $deletePackageId;
@@ -28,12 +31,16 @@ class PackageIndex extends Component
 
     public function mount()
     {
-        $this->refreshPackages();
+        // $this->refreshPackages();
     }
 
     public function render()
     {
-        return view('livewire.packages.package-index');
+        $packages = $this->packageService->getPaginatedPackages(10); 
+
+        return view('livewire.packages.package-index', [
+            'packages' => $packages
+        ]);
     }
 
     public function create()
@@ -51,6 +58,8 @@ class PackageIndex extends Component
         );
 
         $this->packageService->createPackage($dto);
+        $this->resetPage();
+        
         $this->afterAction('Paket berhasil dibuat.');
     }
     

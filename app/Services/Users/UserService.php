@@ -19,6 +19,11 @@ class UserService
         return $this->userRepository->getAll();
     }
 
+    public function paginateUsers(int $perPage = 10)
+    {
+        return $this->userRepository->paginate($perPage);
+    }
+
     public function getUserById(int $id)
     {
         return $this->userRepository->find($id);

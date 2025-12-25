@@ -75,6 +75,8 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <x-pagination :paginator="$users" />
             
             <flux:modal name="create-user" flyout variant="floating" class="md:w-lg" wire:key="create-modal-{{ $modalKey }}">
                 <form wire:submit.prevent="create" class="space-y-6">

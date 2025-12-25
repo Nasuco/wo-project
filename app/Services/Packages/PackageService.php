@@ -19,6 +19,11 @@ class PackageService
         return $this->packageRepository->getAll();
     }
 
+    public function getPaginatedPackages(int $perPage = 10)
+    {
+        return $this->packageRepository->paginate($perPage);
+    }
+
     public function getPackageById(int $id)
     {
         return $this->packageRepository->find($id);

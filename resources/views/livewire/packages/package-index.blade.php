@@ -95,6 +95,8 @@
                 </tbody>
             </table>
 
+            <x-pagination :paginator="$packages" />
+
             <flux:modal name="create-package" flyout variant="floating" class="md:w-lg" wire:key="create-modal-{{ $modalKey }}">
                 <form wire:submit.prevent="create" class="space-y-6">
                     <div class="p-6">

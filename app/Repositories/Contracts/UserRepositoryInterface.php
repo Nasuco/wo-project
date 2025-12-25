@@ -4,10 +4,12 @@ namespace App\Repositories\Contracts;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface UserRepositoryInterface
 {
     public function getAll(): Collection;
+    public function paginate(int $perPage = 10): LengthAwarePaginator;
     public function find(int $id): ?User;
     public function create(array $data): User;
     public function update(User $user, array $data): bool;

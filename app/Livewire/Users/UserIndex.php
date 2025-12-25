@@ -8,13 +8,16 @@ use App\Livewire\Forms\UserForm;
 use App\Services\Users\UserService;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithPagination;
+
 use function Flasher\Prime\flash;
 
 class UserIndex extends Component
 {
+    use WithPagination;
     public UserForm $form;
 
-    public $users;
+    // public $users;
     public $modalKey = 0;
     
     public $showUser;
@@ -29,12 +32,15 @@ class UserIndex extends Component
 
     public function mount()
     {
-        $this->refreshUsers();
+        // $this->refreshUsers();
     }
 
     public function render()
     {
-        return view('livewire.users.user-index');
+        $users = $this->userService->paginateUsers(10);
+        return view('livewire.users.user-index', [
+            'users' => $users
+        ]);
     }
 
     public function create()
