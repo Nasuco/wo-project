@@ -38,9 +38,9 @@
                                 <input type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-900 dark:border-zinc-600 dark:checked:bg-indigo-500">
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
+                        <x-sortable-th name="name" :sort-col="$sortCol" :sort-dir="$sortDir">
                             Nama Pengguna
-                        </th>
+                        </x-sortable-th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
                             Aksi
                         </th>

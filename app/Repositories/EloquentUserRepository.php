@@ -14,7 +14,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         return User::latest()->get();
     }
 
-    public function paginate(int $perPage = 10, string $search = ''): LengthAwarePaginator
+    public function paginate(int $perPage = 10, string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): LengthAwarePaginator
     {
         return User::query()
             ->when($search, function ($query, $search) {
@@ -23,7 +23,7 @@ class EloquentUserRepository implements UserRepositoryInterface
                       ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->latest()
+            ->orderBy($sortCol, $sortDir)
             ->paginate($perPage);
     }
 

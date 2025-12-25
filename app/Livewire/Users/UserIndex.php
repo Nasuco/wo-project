@@ -17,11 +17,11 @@ class UserIndex extends Component
     use WithPagination;
     public $search = '';
     public UserForm $form;
-
     public $modalKey = 0;
-    
     public $showUser;
     public $deleteUserId;
+    public $sortCol = 'created_at';
+    public $sortDir = 'desc';
 
     protected UserService $userService;
 
@@ -41,9 +41,24 @@ class UserIndex extends Component
         //
     }
 
+    public function sortBy($column)
+    {
+        if ($this->sortCol === $column) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortCol = $column;
+            $this->sortDir = 'asc';
+        }
+    }
+
     public function render()
     {
-        $users = $this->userService->paginateUsers(10, $this->search);
+        $users = $this->userService->paginateUsers(
+            10,
+            $this->search,
+            $this->sortCol,
+            $this->sortDir
+        );
         return view('livewire.users.user-index', [
             'users' => $users
         ]);

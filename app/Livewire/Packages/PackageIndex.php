@@ -21,6 +21,8 @@ class PackageIndex extends Component
     public $modalKey = 0;
     public $showPackage;
     public $deletePackageId;
+    public $sortCol = 'created_at';
+    public $sortDir = 'desc';
 
     protected PackageService $packageService;
 
@@ -39,9 +41,24 @@ class PackageIndex extends Component
         //
     }
 
+    public function sortBy($column)
+    {
+        if ($this->sortCol === $column) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortCol = $column;
+            $this->sortDir = 'asc';
+        }
+    }
+
     public function render()
     {
-        $packages = $this->packageService->getPaginatedPackages(10, $this->search); 
+        $packages = $this->packageService->getPaginatedPackages(
+            10, 
+            $this->search ?? '',
+            $this->sortCol,
+            $this->sortDir
+        ); 
 
         return view('livewire.packages.package-index', [
             'packages' => $packages
