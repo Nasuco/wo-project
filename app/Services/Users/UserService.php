@@ -63,4 +63,9 @@ class UserService
         $user = $this->userRepository->find($userId);
         return $this->userRepository->delete($user);
     }
+
+    public function bulkDeleteUsers(array $ids)
+    {
+        return $this->userRepository->bulkDelete($ids);
+    }
 }

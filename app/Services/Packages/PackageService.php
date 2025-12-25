@@ -68,4 +68,9 @@ class PackageService
         $package = $this->packageRepository->find($packageId);
         return $this->packageRepository->delete($package);
     }
+
+    public function bulkDeletePackages(array $ids)
+    {
+        return $this->packageRepository->bulkDelete($ids);
+    }
 }

@@ -42,4 +42,9 @@ class EloquentPackageRepository implements PackageRepositoryInterface
     {
         return $package->delete();
     }
+
+    public function bulkDelete(array $ids): bool
+    {
+        return Packages::whereIn('id', $ids)->delete();
+    }
 }

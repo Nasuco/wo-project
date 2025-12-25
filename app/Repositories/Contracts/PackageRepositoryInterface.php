@@ -19,4 +19,5 @@ interface PackageRepositoryInterface
     public function create(array $data): Packages;
     public function update(Packages $package, array $data): bool;
     public function delete(Packages $package): bool;
+    public function bulkDelete(array $ids): bool;
 }

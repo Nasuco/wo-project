@@ -46,4 +46,9 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         return $user->delete();
     }
+
+    public function bulkDelete(array $ids): bool
+    {
+        return User::whereIn('id', $ids)->delete();
+    }
 }

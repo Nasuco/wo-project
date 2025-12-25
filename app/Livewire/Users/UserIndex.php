@@ -22,6 +22,9 @@ class UserIndex extends Component
     public $deleteUserId;
     public $sortCol = 'created_at';
     public $sortDir = 'desc';
+    public $selected = [];
+    public $selectAll = false;
+    public bool $isBulkDeletion = false;
 
     protected UserService $userService;
 
@@ -112,6 +115,7 @@ class UserIndex extends Component
     {
         if (!$id) return;
         
+        $this->isBulkDeletion = false;
         $this->deleteUserId = $id;
         sweetalert()
             ->showDenyButton()
@@ -120,15 +124,77 @@ class UserIndex extends Component
             ->warning('Apakah benar ingin menghapus pengguna ini?');
     }
 
+    public function confirmBulkDelete()
+    {
+        if (empty($this->selected)) {
+            flash()->error('Tidak ada data yang dipilih.');
+            return;
+        }
+
+        $this->isBulkDeletion = true;
+
+        sweetalert()
+            ->showDenyButton()
+            ->confirmButtonText('Ya, hapus semua')
+            ->denyButtonText('Batal')
+            ->warning('Anda akan menghapus ' . count($this->selected) . ' data terpilih!');
+    }
+
     #[On('sweetalert:confirmed')]
     public function onDeleteConfirmed(): void
     {
-        if ($this->deleteUserId) {
+        if ($this->isBulkDeletion) {
+            $this->userService->bulkDeleteUsers($this->selected);
+            
+            $this->resetSelection();
+            $this->refreshUsers();
+            
+            flash()->success('Data terpilih berhasil dihapus.');
+            
+            $this->isBulkDeletion = false;
+        }
+        elseif ($this->deleteUserId) {
             $this->userService->deleteUser($this->deleteUserId);
+            
             $this->deleteUserId = null;
             $this->refreshUsers();
+            
             flash()->success('Pengguna berhasil dihapus.');
         }
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->userService
+                ->paginateUsers(10, $this->search)
+                ->pluck('id')
+                ->map(fn($id) => (string) $id)
+                ->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedPage() { $this->resetSelection(); }
+    public function updatedSearch() { $this->resetSelection(); }
+
+    public function resetSelection()
+    {
+        $this->selected = [];
+        $this->selectAll = false;
+    }
+
+    public function deleteSelected()
+    {
+        if (empty($this->selected)) return;
+
+        $this->userService->bulkDeleteUsers($this->selected);
+
+        $this->resetSelection();
+        $this->refreshUsers();
+        
+        flash()->success('Data terpilih berhasil dihapus.'); 
     }
 
     private function refreshUsers()
