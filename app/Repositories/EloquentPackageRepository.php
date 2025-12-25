@@ -13,13 +13,13 @@ class EloquentPackageRepository implements PackageRepositoryInterface
         return Packages::latest()->get();
     }
 
-    public function paginate(int $perPage = 10, string $search = ''): LengthAwarePaginator
+    public function paginate(int $perPage = 10, string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc'): LengthAwarePaginator
     {
         return Packages::query()
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
-            ->latest()
+            ->orderBy($sortCol, $sortDir)
             ->paginate($perPage);
     }
 

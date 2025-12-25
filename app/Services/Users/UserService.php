@@ -19,9 +19,9 @@ class UserService
         return $this->userRepository->getAll();
     }
 
-    public function paginateUsers(int $perPage = 10, string $search = '')
+    public function paginateUsers(int $perPage = 10, string $search = '', string $sortCol = 'created_at', string $sortDir = 'desc')
     {
-        return $this->userRepository->paginate($perPage, $search);
+        return $this->userRepository->paginate($perPage, $search, $sortCol, $sortDir);
     }
 
     public function getUserById(int $id)
