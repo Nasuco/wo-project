@@ -26,17 +26,32 @@
             </button>
 
             <div class="hidden md:flex items-center space-x-1">
-                @foreach ($paginator->getUrlRange(max(1, $paginator->currentPage() - 2), min($paginator->lastPage(), $paginator->currentPage() + 2)) as $page => $url)
-                    @if($page == $paginator->currentPage())
-                        <span class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow-sm">
-                            {{ $page }}
+                @php
+                    $elements = \Illuminate\Pagination\UrlWindow::make($paginator);
+                @endphp
+
+                @foreach ($elements as $element)
+                    @if (is_string($element))
+                        <span class="px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-zinc-500 cursor-default">
+                            {{ $element }}
                         </span>
-                    @else
-                        <button 
-                            wire:click="gotoPage({{ $page }})"
-                            class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors duration-200">
-                            {{ $page }}
-                        </button>
+                    @endif
+
+                    {{-- Case 2: Jika elemen adalah array link (halaman) --}}
+                    @if (is_array($element))
+                        @foreach ($element as $page => $url)
+                            @if ($page == $paginator->currentPage())
+                                <span class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white shadow-sm">
+                                    {{ $page }}
+                                </span>
+                            @else
+                                <button 
+                                    wire:click="gotoPage({{ $page }})"
+                                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors duration-200">
+                                    {{ $page }}
+                                </button>
+                            @endif
+                        @endforeach
                     @endif
                 @endforeach
             </div>
