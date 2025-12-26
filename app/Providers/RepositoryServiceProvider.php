@@ -6,7 +6,9 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\PackageRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\EloquentPackageRepository;
+use App\Repositories\EloquentRoleRepository;
 use App\Repositories\EloquentUserRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -22,6 +24,10 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind(
             PackageRepositoryInterface::class, EloquentPackageRepository::class
+        );
+
+        $this->app->bind(
+            RoleRepositoryInterface::class, EloquentRoleRepository::class
         );
     }
 

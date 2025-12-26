@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Packages\PackageIndex;
+use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Users\UserCreate;
 use App\Livewire\Users\UserEdit;
 use App\Livewire\Users\UserIndex;
@@ -20,8 +21,8 @@ Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
     Route::get("users", UserIndex::class)->name("users.index");
-    
     Route::get("packages", PackageIndex::class)->name("packages.index");
+    Route::get("roles", RoleIndex::class)->name("roles.index");
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
     Volt::route('settings/password', 'settings.password')->name('user-password.edit');

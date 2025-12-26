@@ -18,7 +18,8 @@
         "maatwebsite/excel": "^3.1",
         "php-flasher/flasher-laravel": "^2.3",
         "php-flasher/flasher-sweetalert-laravel": "^2.3",
-        "php-flasher/flasher-toastr-laravel": "^2.3"
+        "php-flasher/flasher-toastr-laravel": "^2.3",
+        "spatie/laravel-permission": "^6.24"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
